@@ -1,0 +1,80 @@
+openapi: 3.1.0
+info:
+  title: Co-operative map API
+  version: 0.0.1
+  description: |-
+    It describes how to interact with backend of CoMap.
+servers:
+  - url: http://localhost:60180/api
+tags:
+  - name: places
+    description: Everything about places
+paths:
+  /places/findByTags:
+    post:
+      tags:
+        - places
+      summary: Finds Places by tags
+      description: Multiple status values can be provided with comma separated strings
+      operationId: placesFindByTags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tags:
+                  type: array
+                  items:
+                    type: string
+                    examples: ["kids"]
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Place'
+
+components:
+  schemas:
+    Tag:
+      type: object
+      properties:
+        name:
+          type: string
+          examples: ["kids"]
+    Place:
+      type: object
+      properties:
+        placeId:
+          type: string
+          format: uuid
+          examples: ["7b173602-dc66-46c4-9c25-6deebd501ae1"]
+        title:
+          type: string
+          examples: ["Waterfall"]
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        lat:
+          type: number
+        lon:
+          type: number
+        description:
+          type: string
+          format: "html"
+          examples: ["Amazing place"]
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+  - bearerAuth: []
